@@ -1,0 +1,93 @@
+--- mainwindow.cpp.orig	2024-01-01 00:00:00.000000000 +0000
++++ mainwindow.cpp	2024-01-01 00:00:01.000000000 +0000
+@@ -1,3 +1,5 @@
++#include "settingsdialog.h"
++#include "thememanager.h"
+ #include "mainwindow.h"
+ #include "database.h"
+ #include "dialogs.h"
+@@ -1111,12 +1113,67 @@
+ 
+ void MainWindow::backupDatabase()
+ {
+-    QStatusBar *sb = statusBar();
+-    sb->showMessage("Создание резервной копии...", 2000); 
+-    std::cout << "Creating database backup..." << std::endl;
+-    QMessageBox::information(this, "Информация", "Функция резервного копирования будет реализована в следующей версии");
++    if (!db) return;
++    
++    // Используем BackupDialog для создания бэкапа
++    BackupDialog dialog(this, db, false); // false = режим создания бэкапа
++    
++    if (dialog.exec() == QDialog::Accepted) {
++        updateStatus("✅ Резервная копия создана", 3000);
++    }
+ }
+ 
++void MainWindow::importFromCSV()
++{
++    if (!db) return;
++    
++    QString fileName = QFileDialog::getOpenFileName(
++        this, "Импорт данных из CSV",
++        QDir::homePath(),
++        "CSV файлы (*.csv);;Все файлы (*.*)");
++    
++    if (fileName.isEmpty()) return;
++    
++    // Базовая реализация импорта
++    QFile file(fileName);
++    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
++        showError("Не удалось открыть файл: " + file.errorString());
++        return;
++    }
++    
++    QTextStream in(&file);
++    QString header = in.readLine(); // Пропускаем заголовок
++    
++    int importedCount = 0;
++    while (!in.atEnd()) {
++        QString line = in.readLine();
++        QStringList fields = line.split(',');
++        
++        if (fields.size() >= 2) {
++            QMap<QString, QVariant> data;
++            data["name"] = fields[0].trimmed();
++            data["quantity"] = fields.size() > 1 ? fields[1].toDouble() : 0.0;
++            data["unit"] = "г";
++            data["hazard_class"] = 3;
++            
++            if (db->addChemical(data)) {
++                importedCount++;
++            }
++        }
++    }
++    
++    file.close();
++    
++    if (importedCount > 0) {
++        updateChemicalTable();
++        updateStatistics();
++        showSuccess(QString("✅ Импортировано %1 записей из CSV").arg(importedCount));
++    } else {
++        showInfo("Не удалось импортировать записи из CSV файла");
++    }
++    
++    db->logActivity("Импорт CSV", QString("Импортировано %1 записей").arg(importedCount));
++}
++
+ void MainWindow::restoreDatabase()
+ {
+     QStatusBar *sb = statusBar();
+@@ -1162,7 +1219,9 @@
+ 
+ void MainWindow::showSettings()
+ {
+-    showInfo("Настройки приложения будут реализованы в следующей версии");
++    if (!db) return;
++    
++    SettingsDialog dialog(this, db);
++    dialog.exec();
+ }
+ 
+ // Остальные методы-заглушки

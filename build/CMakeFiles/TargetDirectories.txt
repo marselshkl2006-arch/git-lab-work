@@ -1,0 +1,5 @@
+/home/marsel/projects/Cemical_lab_system/ChemicalLabQt/build/CMakeFiles/ChemicalLabQt.dir
+/home/marsel/projects/Cemical_lab_system/ChemicalLabQt/build/CMakeFiles/edit_cache.dir
+/home/marsel/projects/Cemical_lab_system/ChemicalLabQt/build/CMakeFiles/rebuild_cache.dir
+/home/marsel/projects/Cemical_lab_system/ChemicalLabQt/build/CMakeFiles/ChemicalLabQt_autogen_timestamp_deps.dir
+/home/marsel/projects/Cemical_lab_system/ChemicalLabQt/build/CMakeFiles/ChemicalLabQt_autogen.dir

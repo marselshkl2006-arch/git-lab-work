@@ -1,0 +1,13 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>icons/app_icon.png</file>
+    <file>icons/add.png</file>
+    <file>icons/delete.png</file>
+    <file>icons/edit.png</file>
+    <file>icons/export.png</file>
+    <file>icons/import.png</file>
+    <file>icons/print.png</file>
+    <file>icons/save.png</file>
+    <file>styles/default.qss</file>
+</qresource>
+</RCC>
